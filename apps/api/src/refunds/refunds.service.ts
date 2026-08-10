@@ -35,7 +35,7 @@ export class RefundsService {
     const refund = await this.prisma.refund.create({
       data: {
         businessId: businessId,
-        branchId: branch?.id,
+        branchId: branch?.id as string,
         refundNumber: `REF-${Math.floor(1000 + Math.random() * 9000)}`,
         paymentId: data.paymentId,
         amount: parseFloat(data.amount),

@@ -58,7 +58,7 @@ export class PaymentsService {
     const payment = await this.prisma.payment.create({
       data: {
         businessId: businessId,
-        branchId: branch?.id,
+        branchId: branch?.id as string,
         paymentNumber: `PAY-${Math.floor(1000 + Math.random() * 9000)}`,
         paymentMethod: data.method,
         amount: parseFloat(data.amount),

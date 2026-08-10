@@ -15,7 +15,7 @@ export class HousekeepingService {
     const cleanRoomsCount = await this.prisma.room.count({ where: { businessId, housekeepingStatus: 'CLEAN' } });
     const inspectionCount = await this.prisma.room.count({ where: { businessId, housekeepingStatus: 'INSPECTION' } });
     const openTasks = await this.prisma.housekeepingTask.count({ where: { businessId, status: { in: ['PENDING', 'IN_PROGRESS'] } } });
-    const staffOnDuty = await this.prisma.userBusiness.count({ where: { businessId } });
+    const staffOnDuty = await this.prisma.user.count();
 
     return {
       dirtyRooms: dirtyRoomsCount,
@@ -52,13 +52,12 @@ export class HousekeepingService {
     if (!businessId) return [];
     const tasks = await this.prisma.housekeepingTask.findMany({
       where: { businessId },
-      orderBy: { createdAt: 'desc' },
-      include: { room: true }
+      orderBy: { priority: 'desc' }
     });
 
     return tasks.map(t => ({
       id: t.id,
-      roomNumber: t.room?.roomNumber || 'N/A',
+      roomNumber: t.roomId || 'N/A',
       taskType: t.taskType,
       priority: t.priority,
       status: t.status,
@@ -72,7 +71,7 @@ export class HousekeepingService {
     const task = await this.prisma.housekeepingTask.create({
       data: {
         businessId: businessId,
-        branchId: branch?.id,
+        branchId: branch?.id as string,
         taskNumber: `TSK-${Math.floor(1000 + Math.random() * 9000)}`,
         roomId: data.roomId,
         taskType: data.taskType || 'CLEANING',
@@ -139,7 +138,7 @@ export class HousekeepingService {
     const mov = await this.prisma.linenMovement.create({
       data: {
         businessId: businessId,
-        branchId: branch?.id,
+        branchId: branch?.id as string,
         linenItemId: data.linenItemId,
         quantity: parseInt(data.quantity) || 1,
         fromLocationId: data.fromLocation,
@@ -166,7 +165,7 @@ export class HousekeepingService {
     const lf = await this.prisma.lostAndFoundItem.create({
       data: {
         businessId: businessId,
-        branchId: branch?.id,
+        branchId: branch?.id as string,
         itemNumber: `LF-${Math.floor(1000 + Math.random() * 9000)}`,
         description: data.description || data.itemName || 'Unknown Item',
         category: data.category || 'OTHER',

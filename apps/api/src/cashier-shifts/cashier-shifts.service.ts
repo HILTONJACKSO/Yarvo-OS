@@ -89,7 +89,7 @@ export class CashierShiftsService {
     const shift = await this.prisma.cashierShift.create({
       data: {
         businessId: businessId,
-        branchId: branch?.id,
+        branchId: branch?.id as string,
         cashRegisterId: data.cashRegisterId || 'REG-001',
         employeeId: userId,
         openedByUserId: userId,

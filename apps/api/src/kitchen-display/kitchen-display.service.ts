@@ -12,9 +12,8 @@ export class KitchenDisplayService {
       include: {
         order: {
           include: {
-            orderItems: {
+            items: {
               include: {
-                menuItem: true,
                 modifiers: true
               }
             }
@@ -32,9 +31,9 @@ export class KitchenDisplayService {
       status: ticket.status || 'NEW',
       priority: ticket.priority || 'NORMAL',
       receivedAt: ticket.sentAt,
-      items: ticket.order?.orderItems?.map((item: any) => ({
+      items: ticket.order?.items?.map((item: any) => ({
         id: item.id,
-        name: item.menuItem?.name || 'Item',
+        name: item.itemNameSnapshot || 'Item',
         quantity: item.quantity,
         notes: item.notes || '',
         modifiers: item.modifiers?.map((m: any) => m.name).join(', ') || ''
