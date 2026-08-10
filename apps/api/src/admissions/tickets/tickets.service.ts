@@ -15,9 +15,10 @@ export class TicketsService {
         name: data.name,
         code: data.code,
         validityType: data.validityType,
+        basePrice: data.basePrice || 0,
         status: data.status,
-        businessId: data.businessId || 'b1',
-        venueId: data.venueId || 'v1',
+        businessId: data.businessId || 'default', // Note: in real prod, extract from request user
+        venueId: data.venueId || 'default',
       }
     });
   }
@@ -63,8 +64,8 @@ export class TicketsService {
         
         const ticket = await this.prisma.ticket.create({
           data: {
-            businessId: 'b1',
-            venueId: 'v1',
+            businessId: 'default',
+            venueId: 'default',
             ticketTypeId: item.id,
             ticketNumber: `TKT-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
             status: 'ACTIVE',
