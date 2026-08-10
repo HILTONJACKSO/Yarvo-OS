@@ -25,7 +25,7 @@ export class PaymentsService {
     // Refunds total
     const totalRefunds = allRefunds.reduce((sum, r) => sum + r.amount, 0);
 
-    // Calculate pending from unpaid folios (mock simplified for real db)
+    // Calculate pending from unpaid folios (simplified for real db)
     const pending = 0; // Keeping 0 unless we calculate full folios balances
 
     return {

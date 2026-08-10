@@ -9,7 +9,9 @@ export class BarDisplayService {
     // For robust implementation, we would filter by a PreparationStation where type === 'BAR'
     const tickets = await this.prisma.preparationTicket.findMany({
       include: {
-        order: true
+        order: {
+          include: { items: true }
+        }
       },
       orderBy: { sentAt: 'asc' }
     });
@@ -22,7 +24,12 @@ export class BarDisplayService {
       status: ticket.status || 'NEW',
       priority: ticket.priority || 'NORMAL',
       receivedAt: ticket.sentAt,
-      items: [] // Placeholder
+      items: ticket.order?.items?.map((i: any) => ({
+        id: i.id,
+        name: i.menuItemName || 'Unknown Item',
+        quantity: i.quantity,
+        notes: i.specialInstructions || ''
+      })) || []
     }));
   }
 
