@@ -5,7 +5,7 @@ import { PrismaService } from '../../prisma.service';
 export class TicketsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
+  findAll(businessId?: string) {
     return this.prisma.ticketType.findMany();
   }
 

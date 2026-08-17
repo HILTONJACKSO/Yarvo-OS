@@ -8,7 +8,7 @@ export class StockCountsService {
     return 'This action adds a new stockCount';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all stockCounts`;
   }
 

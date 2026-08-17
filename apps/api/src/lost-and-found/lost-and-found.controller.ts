@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { LostAndFoundService } from './lost-and-found.service';
 import { CreateLostAndFoundDto } from './dto/create-lost-and-found.dto';
 import { UpdateLostAndFoundDto } from './dto/update-lost-and-found.dto';
@@ -13,8 +13,9 @@ export class LostAndFoundController {
   }
 
   @Get()
-  findAll() {
-    return this.lostAndFoundService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.lostAndFoundService.findAll(businessId);
   }
 
   @Get(':id')

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { InventoryWasteService } from './inventory-waste.service';
 import { CreateInventoryWasteDto } from './dto/create-inventory-waste.dto';
 import { UpdateInventoryWasteDto } from './dto/update-inventory-waste.dto';
@@ -13,8 +13,9 @@ export class InventoryWasteController {
   }
 
   @Get()
-  findAll() {
-    return this.inventoryWasteService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.inventoryWasteService.findAll(businessId);
   }
 
   @Get(':id')

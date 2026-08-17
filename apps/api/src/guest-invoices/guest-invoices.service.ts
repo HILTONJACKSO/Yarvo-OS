@@ -8,7 +8,7 @@ export class GuestInvoicesService {
     return 'This action adds a new guestInvoice';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all guestInvoices`;
   }
 

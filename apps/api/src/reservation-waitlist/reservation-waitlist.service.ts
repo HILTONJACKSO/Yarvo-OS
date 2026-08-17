@@ -5,8 +5,8 @@ import { PrismaService } from '../prisma.service';
 export class ReservationWaitlistService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.reservationWaitlist.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.reservationWaitlist.findMany({ where: businessId ? { businessId } : undefined, 
       include: {
         customer: true,
         roomType: true

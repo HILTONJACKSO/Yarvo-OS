@@ -5,8 +5,8 @@ import { PrismaService } from '../../prisma.service';
 export class CorporateService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.corporateAccount.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.corporateAccount.findMany({ where: businessId ? { businessId } : undefined, 
       orderBy: { companyName: 'asc' }
     });
   }

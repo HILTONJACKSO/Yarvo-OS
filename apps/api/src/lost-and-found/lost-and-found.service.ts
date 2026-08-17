@@ -8,7 +8,7 @@ export class LostAndFoundService {
     return 'This action adds a new lostAndFound';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all lostAndFound`;
   }
 

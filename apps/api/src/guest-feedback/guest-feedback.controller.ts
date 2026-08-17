@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { GuestFeedbackService } from './guest-feedback.service';
 import { CreateGuestFeedbackDto } from './dto/create-guest-feedback.dto';
 import { UpdateGuestFeedbackDto } from './dto/update-guest-feedback.dto';
@@ -13,8 +13,9 @@ export class GuestFeedbackController {
   }
 
   @Get()
-  findAll() {
-    return this.guestFeedbackService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.guestFeedbackService.findAll(businessId);
   }
 
   @Get(':id')

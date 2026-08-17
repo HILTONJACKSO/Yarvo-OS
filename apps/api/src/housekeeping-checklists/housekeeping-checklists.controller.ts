@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { HousekeepingChecklistsService } from './housekeeping-checklists.service';
 import { CreateHousekeepingChecklistDto } from './dto/create-housekeeping-checklist.dto';
 import { UpdateHousekeepingChecklistDto } from './dto/update-housekeeping-checklist.dto';
@@ -13,8 +13,9 @@ export class HousekeepingChecklistsController {
   }
 
   @Get()
-  findAll() {
-    return this.housekeepingChecklistsService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.housekeepingChecklistsService.findAll(businessId);
   }
 
   @Get(':id')

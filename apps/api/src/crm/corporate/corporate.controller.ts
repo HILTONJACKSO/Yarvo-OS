@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Headers } from '@nestjs/common';
 import { CorporateService } from './corporate.service';
 
 @Controller('crm/corporate')
@@ -6,7 +6,8 @@ export class CorporateController {
   constructor(private readonly corporateService: CorporateService) {}
 
   @Get()
-  findAll() {
-    return this.corporateService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.corporateService.findAll(businessId);
   }
 }

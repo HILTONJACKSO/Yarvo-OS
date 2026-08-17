@@ -8,7 +8,7 @@ export class InventoryReportsService {
     return 'This action adds a new inventoryReport';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all inventoryReports`;
   }
 

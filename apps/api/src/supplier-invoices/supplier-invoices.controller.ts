@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { SupplierInvoicesService } from './supplier-invoices.service';
 import { CreateSupplierInvoiceDto } from './dto/create-supplier-invoice.dto';
 import { UpdateSupplierInvoiceDto } from './dto/update-supplier-invoice.dto';
@@ -18,8 +18,9 @@ export class SupplierInvoicesController {
   }
 
   @Get()
-  findAll() {
-    return this.supplierInvoicesService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.supplierInvoicesService.findAll(businessId);
   }
 
   @Get(':id')

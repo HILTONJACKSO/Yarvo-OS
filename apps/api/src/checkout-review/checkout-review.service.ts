@@ -8,7 +8,7 @@ export class CheckoutReviewService {
     return 'This action adds a new checkoutReview';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all checkoutReview`;
   }
 

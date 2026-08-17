@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { StockBalancesService } from './stock-balances.service';
 import { CreateStockBalanceDto } from './dto/create-stock-balance.dto';
 import { UpdateStockBalanceDto } from './dto/update-stock-balance.dto';
@@ -13,8 +13,9 @@ export class StockBalancesController {
   }
 
   @Get()
-  findAll() {
-    return this.stockBalancesService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.stockBalancesService.findAll(businessId);
   }
 
   @Get(':id')

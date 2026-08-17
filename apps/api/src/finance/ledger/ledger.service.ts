@@ -5,8 +5,8 @@ import { PrismaService } from '../../prisma.service';
 export class LedgerService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.journalEntry.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.journalEntry.findMany({ where: businessId ? { businessId } : undefined, 
       orderBy: {
         entryDate: 'desc'
       }

@@ -5,8 +5,8 @@ import { PrismaService } from '../../prisma.service';
 export class BudgetsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.budget.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.budget.findMany({ where: businessId ? { businessId } : undefined, 
       orderBy: { fiscalYear: 'desc' }
     });
   }

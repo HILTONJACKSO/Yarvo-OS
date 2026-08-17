@@ -8,7 +8,7 @@ export class LinenService {
     return 'This action adds a new linen';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all linen`;
   }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { InventoryConsumptionService } from './inventory-consumption.service';
 import { CreateInventoryConsumptionDto } from './dto/create-inventory-consumption.dto';
 import { UpdateInventoryConsumptionDto } from './dto/update-inventory-consumption.dto';
@@ -13,8 +13,9 @@ export class InventoryConsumptionController {
   }
 
   @Get()
-  findAll() {
-    return this.inventoryConsumptionService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.inventoryConsumptionService.findAll(businessId);
   }
 
   @Get(':id')

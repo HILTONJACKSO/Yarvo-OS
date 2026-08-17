@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { ReceivablesService } from './receivables.service';
 import { CreateReceivableDto } from './dto/create-receivable.dto';
 import { UpdateReceivableDto } from './dto/update-receivable.dto';
@@ -13,8 +13,9 @@ export class ReceivablesController {
   }
 
   @Get()
-  findAll() {
-    return this.receivablesService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.receivablesService.findAll(businessId);
   }
 
   @Get(':id')

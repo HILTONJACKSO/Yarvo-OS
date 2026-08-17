@@ -8,7 +8,7 @@ export class StockBalancesService {
     return 'This action adds a new stockBalance';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all stockBalances`;
   }
 

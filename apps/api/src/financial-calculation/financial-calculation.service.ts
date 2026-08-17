@@ -8,7 +8,7 @@ export class FinancialCalculationService {
     return 'This action adds a new financialCalculation';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all financialCalculation`;
   }
 

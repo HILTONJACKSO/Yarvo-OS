@@ -8,7 +8,7 @@ export class HousekeepingTasksService {
     return 'This action adds a new housekeepingTask';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all housekeepingTasks`;
   }
 

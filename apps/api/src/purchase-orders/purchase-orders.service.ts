@@ -8,7 +8,7 @@ export class PurchaseOrdersService {
     return 'This action adds a new purchaseOrder';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all purchaseOrders`;
   }
 

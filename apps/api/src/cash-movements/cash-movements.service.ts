@@ -8,7 +8,7 @@ export class CashMovementsService {
     return 'This action adds a new cashMovement';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all cashMovements`;
   }
 

@@ -8,7 +8,7 @@ export class SettlementsService {
     return 'This action adds a new settlement';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all settlements`;
   }
 

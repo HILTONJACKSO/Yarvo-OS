@@ -8,7 +8,7 @@ export class RecipesService {
     return 'This action adds a new recipe';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all recipes`;
   }
 

@@ -8,7 +8,7 @@ export class InventoryBatchesService {
     return 'This action adds a new inventoryBatch';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all inventoryBatches`;
   }
 

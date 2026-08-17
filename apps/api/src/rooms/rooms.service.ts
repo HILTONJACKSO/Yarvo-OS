@@ -5,8 +5,8 @@ import { PrismaService } from '../prisma.service';
 export class RoomsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.room.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.room.findMany({ where: businessId ? { businessId } : undefined, 
       include: { roomType: true },
       orderBy: { roomNumber: 'asc' }
     });

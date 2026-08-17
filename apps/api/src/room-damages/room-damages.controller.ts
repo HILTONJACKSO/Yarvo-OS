@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { RoomDamagesService } from './room-damages.service';
 import { CreateRoomDamageDto } from './dto/create-room-damage.dto';
 import { UpdateRoomDamageDto } from './dto/update-room-damage.dto';
@@ -13,8 +13,9 @@ export class RoomDamagesController {
   }
 
   @Get()
-  findAll() {
-    return this.roomDamagesService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.roomDamagesService.findAll(businessId);
   }
 
   @Get(':id')

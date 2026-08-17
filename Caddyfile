@@ -1,0 +1,8 @@
+kwaleebeachresort.com, www.kwaleebeachresort.com {
+    handle_path /api* {
+        reverse_proxy api:3002
+    }
+    handle {
+        reverse_proxy web:3001
+    }
+}

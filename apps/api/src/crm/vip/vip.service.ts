@@ -5,9 +5,9 @@ import { PrismaService } from '../../prisma.service';
 export class VipService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(businessId?: string) {
     return this.prisma.customer.findMany({
-      where: { isVip: true },
+      where: { businessId,  isVip: true },
       orderBy: { createdAt: 'desc' }
     });
   }

@@ -8,7 +8,7 @@ export class RoomDamagesService {
     return 'This action adds a new roomDamage';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all roomDamages`;
   }
 

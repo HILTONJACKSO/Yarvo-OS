@@ -8,7 +8,7 @@ export class StockMovementsService {
     return 'This action adds a new stockMovement';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all stockMovements`;
   }
 

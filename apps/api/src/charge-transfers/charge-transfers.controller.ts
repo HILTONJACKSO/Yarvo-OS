@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { ChargeTransfersService } from './charge-transfers.service';
 import { CreateChargeTransferDto } from './dto/create-charge-transfer.dto';
 import { UpdateChargeTransferDto } from './dto/update-charge-transfer.dto';
@@ -13,8 +13,9 @@ export class ChargeTransfersController {
   }
 
   @Get()
-  findAll() {
-    return this.chargeTransfersService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.chargeTransfersService.findAll(businessId);
   }
 
   @Get(':id')

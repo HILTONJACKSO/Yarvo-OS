@@ -5,8 +5,8 @@ import { PrismaService } from '../../prisma.service';
 export class InvoicesService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.invoice.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.invoice.findMany({ where: businessId ? { businessId } : undefined, 
       orderBy: { invoiceDate: 'desc' }
     });
   }

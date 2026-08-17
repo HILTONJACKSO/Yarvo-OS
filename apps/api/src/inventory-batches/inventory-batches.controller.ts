@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { InventoryBatchesService } from './inventory-batches.service';
 import { CreateInventoryBatchDto } from './dto/create-inventory-batch.dto';
 import { UpdateInventoryBatchDto } from './dto/update-inventory-batch.dto';
@@ -13,8 +13,9 @@ export class InventoryBatchesController {
   }
 
   @Get()
-  findAll() {
-    return this.inventoryBatchesService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.inventoryBatchesService.findAll(businessId);
   }
 
   @Get(':id')

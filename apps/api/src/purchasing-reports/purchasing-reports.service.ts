@@ -8,7 +8,7 @@ export class PurchasingReportsService {
     return 'This action adds a new purchasingReport';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all purchasingReports`;
   }
 

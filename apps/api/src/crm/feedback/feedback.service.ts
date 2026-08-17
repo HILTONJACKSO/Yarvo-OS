@@ -5,8 +5,8 @@ import { PrismaService } from '../../prisma.service';
 export class FeedbackService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.guestFeedback.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.guestFeedback.findMany({ where: businessId ? { businessId } : undefined, 
       orderBy: { createdAt: 'desc' }
     });
   }

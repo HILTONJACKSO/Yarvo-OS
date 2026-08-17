@@ -21,7 +21,7 @@ export class SupplierInvoicesService {
     return 'This action adds a new supplierInvoice';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return this.prisma.supplierInvoice.findMany();
   }
 

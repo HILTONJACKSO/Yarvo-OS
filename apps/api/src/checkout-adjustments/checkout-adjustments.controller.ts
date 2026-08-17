@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { CheckoutAdjustmentsService } from './checkout-adjustments.service';
 import { CreateCheckoutAdjustmentDto } from './dto/create-checkout-adjustment.dto';
 import { UpdateCheckoutAdjustmentDto } from './dto/update-checkout-adjustment.dto';
@@ -13,8 +13,9 @@ export class CheckoutAdjustmentsController {
   }
 
   @Get()
-  findAll() {
-    return this.checkoutAdjustmentsService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.checkoutAdjustmentsService.findAll(businessId);
   }
 
   @Get(':id')

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { PurchasingReportsService } from './purchasing-reports.service';
 import { CreatePurchasingReportDto } from './dto/create-purchasing-report.dto';
 import { UpdatePurchasingReportDto } from './dto/update-purchasing-report.dto';
@@ -13,8 +13,9 @@ export class PurchasingReportsController {
   }
 
   @Get()
-  findAll() {
-    return this.purchasingReportsService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.purchasingReportsService.findAll(businessId);
   }
 
   @Get(':id')

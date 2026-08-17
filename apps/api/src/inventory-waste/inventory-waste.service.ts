@@ -8,7 +8,7 @@ export class InventoryWasteService {
     return 'This action adds a new inventoryWaste';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all inventoryWaste`;
   }
 

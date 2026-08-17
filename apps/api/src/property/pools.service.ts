@@ -6,21 +6,25 @@ export class PoolsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(businessId: string, branchId: string) {
-    return this.prisma.swimmingPool.findMany({ where: { businessId, branchId } });
+    const resources = await this.prisma.beachResource.findMany({ 
+      where: { businessId, branchId } 
+    });
+    // Filter out only pool resources (we prefix their code with POOL_)
+    return resources.filter(r => r.code.startsWith('POOL_'));
   }
 
   async findOne(businessId: string, branchId: string, id: string) {
-    return this.prisma.swimmingPool.findFirst({ where: { id, businessId, branchId } });
+    return this.prisma.beachResource.findFirst({ where: { id, businessId, branchId } });
   }
 
   async create(businessId: string, branchId: string, data: any) {
-    return this.prisma.swimmingPool.create({
+    return this.prisma.beachResource.create({
       data: { ...data, businessId, branchId }
     });
   }
 
   async update(businessId: string, branchId: string, id: string, data: any) {
-    return this.prisma.swimmingPool.update({
+    return this.prisma.beachResource.update({
       where: { id },
       data
     });

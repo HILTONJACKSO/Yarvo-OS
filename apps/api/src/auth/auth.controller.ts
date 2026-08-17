@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Get, Request } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Get, Request, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
@@ -27,6 +27,13 @@ export class AuthController {
   @Post('change-password')
   async changePassword(@Request() req: any, @Body() body: any) {
     await this.authService.changePassword(req.user.userId, body.newPassword);
+    return { success: true };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('set-pin')
+  async setPosPin(@Request() req: any, @Body() body: any) {
+    await this.authService.setPosPin(req.user.userId, body.pin);
     return { success: true };
   }
 }

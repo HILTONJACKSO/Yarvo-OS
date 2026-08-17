@@ -211,7 +211,7 @@ export class ReservationsService {
       }
     });
 
-    this.websocketGateway.broadcast('reservations.updated', { action: 'created', reservation });
+    this.websocketGateway.broadcast('reservations.updated', { action: 'created', reservation }, businessId);
 
     return reservation;
   }

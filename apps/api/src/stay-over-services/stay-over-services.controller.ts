@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { StayOverServicesService } from './stay-over-services.service';
 import { CreateStayOverServiceDto } from './dto/create-stay-over-service.dto';
 import { UpdateStayOverServiceDto } from './dto/update-stay-over-service.dto';
@@ -13,8 +13,9 @@ export class StayOverServicesController {
   }
 
   @Get()
-  findAll() {
-    return this.stayOverServicesService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.stayOverServicesService.findAll(businessId);
   }
 
   @Get(':id')

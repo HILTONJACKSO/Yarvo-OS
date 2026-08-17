@@ -8,7 +8,7 @@ export class StayOverServicesService {
     return 'This action adds a new stayOverService';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all stayOverServices`;
   }
 

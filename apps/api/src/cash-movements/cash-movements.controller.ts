@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { CashMovementsService } from './cash-movements.service';
 import { CreateCashMovementDto } from './dto/create-cash-movement.dto';
 import { UpdateCashMovementDto } from './dto/update-cash-movement.dto';
@@ -13,8 +13,9 @@ export class CashMovementsController {
   }
 
   @Get()
-  findAll() {
-    return this.cashMovementsService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.cashMovementsService.findAll(businessId);
   }
 
   @Get(':id')

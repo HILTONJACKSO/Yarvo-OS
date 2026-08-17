@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Headers } from '@nestjs/common';
 import { CheckoutsService } from './checkouts.service';
 
 @Controller('checkouts')

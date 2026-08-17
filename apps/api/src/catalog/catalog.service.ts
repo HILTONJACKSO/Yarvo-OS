@@ -14,6 +14,18 @@ export class CatalogService {
     
     const missingPrices = await this.prisma.catalogItem.count({ where: { basePrice: 0 } });
     const missingCategories = await this.prisma.catalogItem.count({ where: { categoryId: '' } });
+    
+    const unassignedToMenu = await this.prisma.catalogItem.count({
+      where: { menuItems: { none: {} } }
+    });
+
+    const inactiveServicePoints = await this.prisma.catalogItem.count({
+      where: {
+        servicePointOverrides: {
+          some: { servicePoint: { status: 'INACTIVE' } }
+        }
+      }
+    });
 
     return {
       totalProducts,
@@ -23,7 +35,15 @@ export class CatalogService {
       menus,
       missingPrices,
       missingCategories,
+      unassignedToMenu,
+      inactiveServicePoints,
       serviceItems: 0
     };
+  }
+
+  async getItems() {
+    return this.prisma.catalogItem.findMany({
+      orderBy: { name: 'asc' }
+    });
   }
 }

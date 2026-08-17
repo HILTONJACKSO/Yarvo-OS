@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Headers } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -8,5 +8,8 @@ export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
   @Get()
-  findAll() { return this.permissionsService.findAll(); }
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.permissionsService.findAll(businessId);
+  }
 }

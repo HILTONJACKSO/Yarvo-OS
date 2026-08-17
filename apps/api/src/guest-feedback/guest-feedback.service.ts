@@ -8,7 +8,7 @@ export class GuestFeedbackService {
     return 'This action adds a new guestFeedback';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all guestFeedback`;
   }
 

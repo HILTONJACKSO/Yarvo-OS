@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, UseGuards, Req, Headers } from '@nestjs/common';
 import { BeachResourcesService } from './beach-resources.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -10,18 +10,21 @@ export class BeachResourcesController {
   @Get()
   findAll(@Req() req: any) {
     const branchId = req.headers['x-branch-id'];
-    return this.service.findAll(req.user.businessId, branchId);
+    const businessId = req.headers['x-business-id'] || req.user?.businessId;
+    return this.service.findAll(businessId, branchId);
   }
 
   @Post()
   create(@Req() req: any, @Body() data: any) {
     const branchId = req.headers['x-branch-id'] || data.branchId;
-    return this.service.create(req.user.businessId, branchId, data);
+    const businessId = req.headers['x-business-id'] || req.user?.businessId;
+    return this.service.create(businessId, branchId, data);
   }
 
   @Patch(':id')
   update(@Req() req: any, @Param('id') id: string, @Body() data: any) {
     const branchId = req.headers['x-branch-id'] || data.branchId;
-    return this.service.update(req.user.businessId, branchId, id, data);
+    const businessId = req.headers['x-business-id'] || req.user?.businessId;
+    return this.service.update(businessId, branchId, id, data);
   }
 }

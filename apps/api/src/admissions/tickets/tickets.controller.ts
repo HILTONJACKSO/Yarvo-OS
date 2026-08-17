@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param, Headers } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 
 @Controller('tickets')
@@ -6,8 +6,9 @@ export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
   @Get('types')
-  findAll() {
-    return this.ticketsService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.ticketsService.findAll(businessId);
   }
 
   @Post('types')

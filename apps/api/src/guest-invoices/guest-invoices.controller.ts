@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { GuestInvoicesService } from './guest-invoices.service';
 import { CreateGuestInvoiceDto } from './dto/create-guest-invoice.dto';
 import { UpdateGuestInvoiceDto } from './dto/update-guest-invoice.dto';
@@ -13,8 +13,9 @@ export class GuestInvoicesController {
   }
 
   @Get()
-  findAll() {
-    return this.guestInvoicesService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.guestInvoicesService.findAll(businessId);
   }
 
   @Get(':id')

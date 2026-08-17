@@ -1,4 +1,4 @@
-import { WebSocketGateway, WebSocketServer, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 
@@ -23,9 +23,22 @@ export class AppWebsocketGateway implements OnGatewayInit, OnGatewayConnection, 
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  broadcast(event: string, data: any) {
+  @SubscribeMessage('join_business')
+  handleJoinBusiness(client: Socket, payload: { businessId: string }) {
+    if (payload?.businessId) {
+      client.join(payload.businessId);
+      this.logger.log(`Client \${client.id} joined business room: \${payload.businessId}`);
+    }
+  }
+
+  broadcast(event: string, data: any, businessId?: string) {
     if (this.server) {
-      this.server.emit(event, data);
+      if (businessId) {
+        this.server.to(businessId).emit(event, data);
+      } else {
+        // Fallback for system-wide broadcasts if needed
+        this.server.emit(event, data);
+      }
     }
   }
 }

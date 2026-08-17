@@ -8,7 +8,7 @@ export class HousekeepingChecklistsService {
     return 'This action adds a new housekeepingChecklist';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all housekeepingChecklists`;
   }
 

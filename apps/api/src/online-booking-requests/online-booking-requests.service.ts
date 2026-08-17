@@ -5,8 +5,8 @@ import { PrismaService } from '../prisma.service';
 export class OnlineBookingRequestsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.onlineBookingRequest.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.onlineBookingRequest.findMany({ where: businessId ? { businessId } : undefined, 
       include: {
         roomType: true,
         customer: true

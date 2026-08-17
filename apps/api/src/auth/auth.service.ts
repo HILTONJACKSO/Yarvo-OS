@@ -55,4 +55,14 @@ export class AuthService {
       }
     });
   }
+
+  async setPosPin(userId: string, pin: string) {
+    if (!/^\d{4}$/.test(pin)) {
+      throw new BadRequestException('PIN must be exactly 4 digits');
+    }
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { posPin: pin }
+    });
+  }
 }

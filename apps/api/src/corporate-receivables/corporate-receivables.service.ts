@@ -8,7 +8,7 @@ export class CorporateReceivablesService {
     return 'This action adds a new corporateReceivable';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all corporateReceivables`;
   }
 

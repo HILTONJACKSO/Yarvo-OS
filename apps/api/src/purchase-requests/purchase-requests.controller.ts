@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { PurchaseRequestsService } from './purchase-requests.service';
 import { CreatePurchaseRequestDto } from './dto/create-purchase-request.dto';
 import { UpdatePurchaseRequestDto } from './dto/update-purchase-request.dto';
@@ -13,8 +13,9 @@ export class PurchaseRequestsController {
   }
 
   @Get()
-  findAll() {
-    return this.purchaseRequestsService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.purchaseRequestsService.findAll(businessId);
   }
 
   @Get(':id')

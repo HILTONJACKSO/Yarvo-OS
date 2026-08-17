@@ -1,7 +1,7 @@
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 
-# Install pnpm
-RUN npm install -g pnpm
+# Install pnpm and openssl
+RUN apt-get update && apt-get install -y openssl && npm install -g pnpm
 
 # Dependencies
 FROM base AS deps
@@ -11,6 +11,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # Copy app package.json
 COPY apps/api/package.json ./apps/api/
 # Install dependencies
+RUN pnpm config set ignore-scripts false
 RUN pnpm install --filter api...
 
 # Builder
@@ -22,7 +23,7 @@ COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
 # Generate Prisma Client
-RUN npx prisma generate --schema=./apps/api/prisma/schema.prisma
+RUN pnpm --filter api exec prisma generate
 # Build API
 RUN pnpm --filter api build
 

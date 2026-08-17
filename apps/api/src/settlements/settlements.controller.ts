@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { SettlementsService } from './settlements.service';
 import { CreateSettlementDto } from './dto/create-settlement.dto';
 import { UpdateSettlementDto } from './dto/update-settlement.dto';
@@ -13,8 +13,9 @@ export class SettlementsController {
   }
 
   @Get()
-  findAll() {
-    return this.settlementsService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.settlementsService.findAll(businessId);
   }
 
   @Get(':id')

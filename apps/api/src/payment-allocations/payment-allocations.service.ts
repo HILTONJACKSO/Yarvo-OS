@@ -8,7 +8,7 @@ export class PaymentAllocationsService {
     return 'This action adds a new paymentAllocation';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all paymentAllocations`;
   }
 

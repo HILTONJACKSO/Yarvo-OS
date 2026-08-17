@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
 import { LinenService } from './linen.service';
 import { CreateLinenDto } from './dto/create-linen.dto';
 import { UpdateLinenDto } from './dto/update-linen.dto';
@@ -13,8 +13,9 @@ export class LinenController {
   }
 
   @Get()
-  findAll() {
-    return this.linenService.findAll();
+  findAll(@Headers('x-business-id') businessId: string) {
+    if (!businessId) return [];
+    return this.linenService.findAll(businessId);
   }
 
   @Get(':id')

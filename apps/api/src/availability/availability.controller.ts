@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Headers } from '@nestjs/common';
 import { AvailabilityService } from './availability.service';
 
 @Controller('availability')

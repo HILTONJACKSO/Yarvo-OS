@@ -8,7 +8,7 @@ export class ReceiptsService {
     return 'This action adds a new receipt';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return `This action returns all receipts`;
   }
 

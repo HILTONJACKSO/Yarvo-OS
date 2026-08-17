@@ -5,8 +5,8 @@ import { PrismaService } from '../prisma.service';
 export class GuestRequestsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.guestRequest.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.guestRequest.findMany({ where: businessId ? { businessId } : undefined, 
       include: {
         stay: {
           include: {

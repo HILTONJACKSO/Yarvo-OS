@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { AppWebsocketGateway } from '../websocket/app-websocket.gateway';
 
@@ -9,27 +9,33 @@ export class OrdersService {
     private readonly gateway: AppWebsocketGateway
   ) {}
 
-  async createDraftOrder(orderType: string) {
-    const defaultBusinessId = 'bus_1';
-    const defaultBranchId = 'br_1';
+  async createDraftOrder(businessId: string, providedBranchId: string, orderType: string, serviceTableId?: string) {
     const orderNumber = `ORD-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+    // Get a valid branch ID for this business
+    let branchId = providedBranchId;
+    const branch = await this.prisma.branch.findFirst({ where: { businessId } });
+    if (branch) {
+      branchId = branch.id;
+    }
 
     const order = await this.prisma.order.create({
       data: {
-        businessId: defaultBusinessId,
-        branchId: defaultBranchId,
+        businessId,
+        branchId,
         orderNumber,
         orderType,
+        serviceTableId,
         status: 'DRAFT',
       }
     });
 
-    this.gateway.server.emit('order.updated', order);
+    this.gateway.broadcast('order.updated', order, order.businessId);
     return order;
   }
 
-  async findAll() {
-    return this.prisma.order.findMany({
+  async findAll(businessId?: string) {
+    return this.prisma.order.findMany({ where: businessId ? { businessId } : undefined, 
       include: {
         items: true,
       },
@@ -47,6 +53,9 @@ export class OrdersService {
   }
 
   async updateItems(orderId: string, items: any[]) {
+    const existingOrder = await this.prisma.order.findUnique({ where: { id: orderId } });
+    if (!existingOrder) throw new NotFoundException('Order not found');
+
     // Delete existing items
     await this.prisma.orderItem.deleteMany({
       where: { orderId }
@@ -54,13 +63,10 @@ export class OrdersService {
 
     // Create new items
     if (items.length > 0) {
-      const defaultBusinessId = 'bus_1';
-      const defaultBranchId = 'br_1';
-
       await this.prisma.orderItem.createMany({
         data: items.map(item => ({
-          businessId: defaultBusinessId,
-          branchId: defaultBranchId,
+          businessId: existingOrder.businessId,
+          branchId: existingOrder.branchId,
           orderId,
           catalogItemId: item.catalogItemId,
           itemNameSnapshot: item.name,
@@ -84,7 +90,7 @@ export class OrdersService {
       include: { items: true }
     });
 
-    this.gateway.server.emit('order.updated', order);
+    this.gateway.broadcast('order.updated', order, order.businessId);
     return order;
   }
 
@@ -102,7 +108,7 @@ export class OrdersService {
       include: { items: true }
     });
 
-    this.gateway.server.emit('order.updated', order);
+    this.gateway.broadcast('order.updated', order, order.businessId);
     return order;
   }
 
@@ -118,7 +124,53 @@ export class OrdersService {
       include: { items: true }
     });
     
-    this.gateway.server.emit('order.updated', order);
+    if (order) {
+      const allDelivered = order.items.every(i => i.status === 'DELIVERED');
+      if (allDelivered && order.status !== 'DELIVERED' && order.status !== 'COMPLETED') {
+        await this.prisma.order.update({
+          where: { id: order.id },
+          data: { status: 'DELIVERED' }
+        });
+        order.status = 'DELIVERED';
+      }
+    }
+    
+    this.gateway.broadcast('order.updated', order, order?.businessId);
     return item;
+  }
+
+  async cancelOrder(orderId: string, pin: string, businessId: string) {
+    const validManager = await this.prisma.businessMember.findFirst({
+      where: {
+        businessId,
+        role: { in: ['OWNER', 'MANAGER', 'ADMIN'] },
+        user: { posPin: pin }
+      }
+    });
+
+    if (!validManager) {
+      throw new UnauthorizedException('Invalid PIN or unauthorized role');
+    }
+
+    const order = await this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: 'CANCELLED' },
+      include: { items: true }
+    });
+
+    // Update all items to CANCELLED as well
+    await this.prisma.orderItem.updateMany({
+      where: { orderId: orderId },
+      data: { status: 'CANCELLED' }
+    });
+
+    // Refetch to emit updated items
+    const updatedOrder = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true }
+    });
+
+    this.gateway.broadcast('order.updated', updatedOrder, updatedOrder?.businessId);
+    return updatedOrder;
   }
 }

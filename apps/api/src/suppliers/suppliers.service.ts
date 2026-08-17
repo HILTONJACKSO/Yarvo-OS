@@ -11,7 +11,7 @@ export class SuppliersService {
     return 'This action adds a new supplier';
   }
 
-  findAll() {
+  findAll(businessId?: string) {
     return this.prisma.supplier.findMany();
   }
 
