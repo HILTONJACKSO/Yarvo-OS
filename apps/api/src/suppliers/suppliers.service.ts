@@ -12,7 +12,11 @@ export class SuppliersService {
   }
 
   findAll(businessId?: string) {
-    return this.prisma.supplier.findMany();
+    if (!businessId) return [];
+    return this.prisma.supplier.findMany({
+      where: { businessId },
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
   findOne(id: number) {
