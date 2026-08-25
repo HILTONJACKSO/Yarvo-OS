@@ -8,8 +8,13 @@ export class StockLocationsController {
   constructor(private readonly stockLocationsService: StockLocationsService) {}
 
   @Post()
-  create(@Body() createStockLocationDto: CreateStockLocationDto) {
-    return this.stockLocationsService.create(createStockLocationDto);
+  create(
+    @Body() createStockLocationDto: any,
+    @Headers('x-business-id') businessId: string,
+    @Headers('x-branch-id') branchId: string
+  ) {
+    if (!businessId || !branchId) throw new Error('Missing auth headers');
+    return this.stockLocationsService.create(createStockLocationDto, businessId, branchId);
   }
 
   @Get()

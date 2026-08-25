@@ -7,8 +7,15 @@ import { PrismaService } from '../prisma.service';
 export class StockLocationsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createStockLocationDto: CreateStockLocationDto) {
-    return 'This action adds a new stockLocation';
+  async create(createStockLocationDto: any, businessId: string, branchId: string) {
+    return this.prisma.stockLocation.create({
+      data: {
+        ...createStockLocationDto,
+        businessId,
+        branchId,
+        status: 'ACTIVE'
+      }
+    });
   }
 
   findAll(businessId?: string) {
