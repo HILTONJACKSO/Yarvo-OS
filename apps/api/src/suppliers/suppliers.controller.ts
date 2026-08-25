@@ -8,8 +8,9 @@ export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
   @Post()
-  create(@Body() createSupplierDto: CreateSupplierDto) {
-    return this.suppliersService.create(createSupplierDto);
+  create(@Headers('x-business-id') businessId: string, @Body() createSupplierDto: CreateSupplierDto) {
+    if (!businessId) throw new Error('Business ID is required');
+    return this.suppliersService.create(businessId, createSupplierDto);
   }
 
   @Get()

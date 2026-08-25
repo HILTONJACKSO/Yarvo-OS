@@ -7,8 +7,24 @@ import { UpdateSupplierDto } from './dto/update-supplier.dto';
 export class SuppliersService {
   constructor(private prisma: PrismaService) {}
 
-  create(createSupplierDto: CreateSupplierDto) {
-    return 'This action adds a new supplier';
+  create(businessId: string, data: any) {
+    if (!businessId) throw new Error('Business ID is required');
+    return this.prisma.supplier.create({
+      data: {
+        businessId,
+        supplierNumber: data.supplierNumber || Math.floor(10000 + Math.random() * 90000).toString(),
+        name: data.name,
+        code: data.code,
+        contactName: data.contactName,
+        phone: data.phone,
+        email: data.email,
+        address: data.address,
+        country: data.country,
+        city: data.city,
+        currency: data.currency || 'USD',
+        status: data.status || 'ACTIVE',
+      }
+    });
   }
 
   findAll(businessId?: string) {
