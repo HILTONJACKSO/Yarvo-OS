@@ -13,7 +13,8 @@ export class PurchaseRequestsService {
     // Generate a simple request number
     const requestNumber = `PR-${Date.now()}`;
 
-    return this.prisma.purchaseRequest.create({
+    // Create the purchase request first
+    const request = await this.prisma.purchaseRequest.create({
       data: {
         ...requestData,
         businessId,
@@ -21,19 +22,23 @@ export class PurchaseRequestsService {
         requestNumber,
         requestedByUserId: userId,
         requiredDate: requestData.requiredDate ? new Date(requestData.requiredDate) : null,
-        items: {
-          create: items.map(item => ({
-            inventoryItemId: item.inventoryItemId,
-            requestedQuantity: item.requestedQuantity,
-            unitId: item.unitId || 'default-unit', // Provide fallback or map to correct unit
-            estimatedUnitCost: item.estimatedUnitCost,
-          }))
-        }
-      },
-      include: {
-        items: true,
       }
     });
+
+    // Create the items manually since there is no implicit relation in schema
+    await Promise.all(items.map(item => 
+      this.prisma.purchaseRequestItem.create({
+        data: {
+          purchaseRequestId: request.id,
+          inventoryItemId: item.inventoryItemId,
+          requestedQuantity: item.requestedQuantity,
+          unitId: item.unitId || 'default-unit', // Provide fallback
+          estimatedUnitCost: item.estimatedUnitCost,
+        }
+      })
+    ));
+
+    return request;
   }
 
   findAll(businessId?: string) {
