@@ -8,8 +8,14 @@ export class PurchaseOrdersController {
   constructor(private readonly purchaseOrdersService: PurchaseOrdersService) {}
 
   @Post()
-  create(@Body() createPurchaseOrderDto: CreatePurchaseOrderDto) {
-    return this.purchaseOrdersService.create(createPurchaseOrderDto);
+  create(
+    @Body() createPurchaseOrderDto: CreatePurchaseOrderDto,
+    @Headers('x-business-id') businessId: string,
+    @Headers('x-branch-id') branchId: string,
+    @Headers('x-user-id') userId: string
+  ) {
+    if (!businessId || !branchId || !userId) throw new Error('Missing auth headers');
+    return this.purchaseOrdersService.create(createPurchaseOrderDto, businessId, branchId, userId);
   }
 
   @Get()

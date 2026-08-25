@@ -1,15 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStockLocationDto } from './dto/create-stock-location.dto';
 import { UpdateStockLocationDto } from './dto/update-stock-location.dto';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class StockLocationsService {
+  constructor(private prisma: PrismaService) {}
+
   create(createStockLocationDto: CreateStockLocationDto) {
     return 'This action adds a new stockLocation';
   }
 
   findAll(businessId?: string) {
-    return `This action returns all stockLocations`;
+    if (!businessId) return [];
+    return this.prisma.stockLocation.findMany({
+      where: { businessId },
+      orderBy: { name: 'asc' }
+    });
   }
 
   findOne(id: number) {
