@@ -35,15 +35,22 @@ export class SuppliersService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} supplier`;
+  findOne(id: string) {
+    return this.prisma.supplier.findUnique({
+      where: { id }
+    });
   }
 
-  update(id: number, updateSupplierDto: UpdateSupplierDto) {
-    return `This action updates a #${id} supplier`;
+  update(id: string, updateSupplierDto: UpdateSupplierDto) {
+    return this.prisma.supplier.update({
+      where: { id },
+      data: updateSupplierDto
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} supplier`;
+  remove(id: string) {
+    return this.prisma.supplier.delete({
+      where: { id }
+    });
   }
 }
