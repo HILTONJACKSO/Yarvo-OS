@@ -1,0 +1,1 @@
+const { PrismaClient } = require('@prisma/client'); const prisma = new PrismaClient(); async function main() { const l = await prisma.stockLocation.findMany(); console.log(l.map(x => x.businessId)); const s = await prisma.supplier.findMany(); console.log(s.map(x => x.businessId)); } main().finally(() => prisma.$disconnect());

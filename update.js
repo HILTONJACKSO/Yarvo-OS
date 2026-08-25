@@ -1,0 +1,1 @@
+const { PrismaClient } = require('@prisma/client'); const prisma = new PrismaClient(); async function main() { await prisma.stockLocation.updateMany({ where: { businessId: 'bus-kwalee-1' }, data: { businessId: '198bb80e-d5ef-45c3-93ba-afe332f84e1d' } }); console.log('Updated locations'); } main().finally(() => prisma.$disconnect());
